@@ -1,0 +1,51 @@
+---
+output:
+  bookdown::pdf_document2:
+    toc: false
+    number_sections: false
+documentclass: article
+geometry: margin=0.95in
+---
+
+# \textit{Week 6 Report}
+\vspace{-2mm}
+Ella Hagopian
+
+```{r, include = F}
+## Set libraries
+library(ggplot2)    ## 3.5.1
+library(dplyr)      ## 1.1.4
+library(kableExtra) ## 1.3.4
+library(readr)      ## 2.1.5
+
+## Read in data
+df <- read.csv("../DataRaw/lead-iq-01.csv")
+```
+
+This project uses data from the CDC and includes two variables: distance from lead smelter to the subject's home (near = $\leq$ 1 mile, far = > 1 mile) and IQ score. **Figure 1** depicts the distributions of IQ scores for those living near and those living far from the smelter, though it is difficult to see the distributions because of one individual with a much higher IQ than the others. I am pretending to not notice this for the first commit.
+
+```{r, message = F, fig.cap = "Distribution of IQ score by distance from lead smelter", echo=F}
+## Graph of IQ by location status
+ggplot(df, aes(x = Smelter, y = IQ)) +
+  geom_boxplot() +
+  labs(x = "Smelter distance", y = "IQ")
+```
+
+**Table 1** presents summary statistics of IQ scores by proximity to the lead smelter. Those living near the smelter had a mean IQ of `r round(with(df[df$Smelter=="Near",], mean(IQ)),2)` (SD: `r round(with(df[df$Smelter=="Near",], sd(IQ)),2)`) and those living far had a mean IQ of `r round(with(df[df$Smelter=="Far",], mean(IQ)),2)` (SD: `r round(with(df[df$Smelter=="Far",], sd(IQ)),2)`).
+
+```{r, echo=F}
+## Nicely formatted table
+df %>% 
+  group_by(Smelter) %>% 
+  summarise(n = n(),
+            mean = round(mean(IQ),2),
+            median = median(IQ),
+            sd = round(sd(IQ),2)) %>% 
+  kable(col.names = c("Smelter location", "n", "Mean", "Median", "SD"),
+        align = c("lcccc"),
+        caption = "Summary statistics of IQ scores by proximity to lead smelter"
+        ) %>% 
+  row_spec(0, bold = T) %>% 
+  kable_styling(latex_options = "HOLD_position")
+```
+
