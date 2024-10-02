@@ -20,9 +20,12 @@ library(readr)      ## 2.1.5
 
 ## Read in data
 df <- read.csv("../DataRaw/lead-iq-01.csv")
+
+## From 'meeting' with PI: change IQ 999 to 99
+df$IQ = ifelse(df$IQ == 999, 99, df$IQ)
 ```
 
-This project uses data from the CDC and includes two variables: distance from lead smelter to the subject's home (near = $\leq$ 1 mile, far = > 1 mile) and IQ score. **Figure 1** depicts the distributions of IQ scores for those living near and those living far from the smelter, though it is difficult to see the distributions because of one individual with a much higher IQ than the others. I am pretending to not notice this for the first commit.
+This project uses data from the CDC and includes two variables: distance from lead smelter to the subject's home (near = $\leq$ 1 mile, far = > 1 mile) and IQ score. **Figure 1** depicts the distributions of IQ scores for those living near and those living far from the smelter. The group living further from the smelter has a higher average IQ than those living near the smelter.
 
 ```{r, message = F, fig.cap = "Distribution of IQ score by distance from lead smelter", echo=F}
 ## Graph of IQ by location status
